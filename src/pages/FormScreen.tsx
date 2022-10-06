@@ -1,6 +1,6 @@
 import React , {useState} from 'react'
 import { useNavigate } from "react-router-dom";
-
+import './Form.css'
 
 
 const FormScreen : React.FC = () =>{
@@ -23,15 +23,15 @@ const FormScreen : React.FC = () =>{
         navigate(`/information/${country}`)
     }
 
-
     return (
-        <form>
-            <label>FormScreen</label>
-            <input placeholder='Enter country Name' type='text' value={country} onChange={inputHandler}  />
+        <div className="wrap">
+          <div className="search">
+            <input placeholder='Enter country Name' className="searchTerm"  type='text' value={country} onChange={inputHandler}  />
             <button onClick={handleClick} disabled={disabled} >
                 Search
             </button>
-        </form>
+          </div>
+        </div>
     )
 }
 

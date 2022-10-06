@@ -1,11 +1,14 @@
 import React , {useState , useEffect} from 'react'
 import {useParams , useNavigate} from 'react-router-dom'
 
-type country ={
-    capital : string , 
-    capitalInfo : number[] , 
-    currency : string , 
-    flag : string , 
+interface countrystrc {
+    capital : string[] , 
+    capitalInfo :{
+      latlng : number[]
+    }, 
+    flags : {
+      png : string
+    } , 
     population : number
 }
 
@@ -13,13 +16,7 @@ const Information: React.FC =()=> {
     const {country} = useParams<{country?: string}>()
     const [error  , setError] = useState<string>('')
     const navigate = useNavigate()
-    const [information  , setInformation] = useState<country>({
-        capital : "test" , 
-        capitalInfo : [0 , 0] , 
-        currency : "test", 
-        flag : "test" , 
-        population : 500
-    })
+    const [information  , setInformation] = useState<countrystrc | null>(null)
 
     useEffect(()=>{
         const getData =async ()=>{
@@ -28,22 +25,16 @@ const Information: React.FC =()=> {
             try {
               const res = await fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`)
               const data =await res.json()
-              console.log(data);
              
-              setInformation({
-                 capital : data[0].capital  ,
-                 capitalInfo : data[0].capital[0] , 
-                 currency : data[0].currencies.INR.name , 
-                 flag : data[0].flags.png , 
-                 population : data[0].population
-              });
-             
+              setInformation(data[0]);
+              console.log(information);
               
+              // console.log(information);
             } catch (error) {
               setError('Please check if country name is valid or not')
             }
           }    
-          getData()
+          getData() 
     } , [])
 
     const clickHandler = (event : React.MouseEvent<HTMLButtonElement>)=>{
@@ -52,9 +43,11 @@ const Information: React.FC =()=> {
 
   return (
     <div> 
-                {error ? <h1>{error}</h1> : information?.flag==="test" ? "Loading" : 
-               ( <div>
-                    <img src={information?.flag}  alt='flag'/>
+
+        {error ? <h1>{error}</h1> : information === null ? "Loading" : 
+               ( 
+                <div>
+                    <img src={information?.flags.png}  alt='flag'/>
                     <h1>Capital : {information?.capital[0]}</h1>
                     <p>Population : {information?.population}</p>
                     <button onClick={clickHandler} >
