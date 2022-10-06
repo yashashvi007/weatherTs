@@ -8,7 +8,7 @@ type weather = {
 }
 
 const Weather= ()=> {
-   const {capital} = useParams<{capital?: string}>()
+   const {capital} = useParams<{capital : string}>()
    const [error , setError] = useState<string>('')
    const [information  , setInformation] = useState<weather>({
     capital : '' , 
@@ -38,12 +38,16 @@ const Weather= ()=> {
    return (
     <div>
       {
+
         information.capital === '' ? <h1>Loading</h1> : (
-            <div>
-                <h1>{information.capital}</h1>
-                <h1>{information.temprature - 273 }</h1>
+          <div className="blog_post">
+          <div className="container_copy">
+          <img src='https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/5-Best-Free-and-Paid-Weather-APIs-2019-e1587582023501-1024x576.png'  alt='flag'/>
+          <h1>{information.capital}</h1>
+                <h1>{Math.floor(information.temprature - 273)} degrees</h1>
                 <h1>{information.weather}</h1>
-            </div>
+          </div>
+          </div>
         )
       }
     </div>

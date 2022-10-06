@@ -1,5 +1,6 @@
 import React , {useState , useEffect} from 'react'
 import {useParams , useNavigate} from 'react-router-dom'
+import './Information.css'
 
 interface countrystrc {
     capital : string[] , 
@@ -13,14 +14,15 @@ interface countrystrc {
 }
 
 const Information: React.FC =()=> {
-    const {country} = useParams<{country?: string}>()
+    const {country} = useParams<{country : string}>()
     const [error  , setError] = useState<string>('')
+    const [loading , setLoading] = useState<boolean>(true)
     const navigate = useNavigate()
     const [information  , setInformation] = useState<countrystrc | null>(null)
 
     useEffect(()=>{
         const getData =async ()=>{
-            console.log('calling');
+            setLoading(true)
             setError('')
             try {
               const res = await fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`)
@@ -28,10 +30,11 @@ const Information: React.FC =()=> {
              
               setInformation(data[0]);
               console.log(information);
+              setLoading(false)
               
-              // console.log(information);
             } catch (error) {
               setError('Please check if country name is valid or not')
+              setLoading(false)
             }
           }    
           getData() 
@@ -44,16 +47,24 @@ const Information: React.FC =()=> {
   return (
     <div> 
 
-        {error ? <h1>{error}</h1> : information === null ? "Loading" : 
+        {error ? <h1>{error}</h1> : loading === true ? <h1>Loading...</h1>: information  ? 
                ( 
-                <div>
+                <div className="blog_post">
+                    <div className="container_copy">
                     <img src={information?.flags.png}  alt='flag'/>
                     <h1>Capital : {information?.capital[0]}</h1>
                     <p>Population : {information?.population}</p>
-                    <button onClick={clickHandler} >
+                    <button className="btn_primary" onClick={clickHandler} >
                         Weather
                     </button>
-                </div>)
+                    </div>
+                 </div>  ) : (
+                   <div className="blog_post">
+                      <div className="container_copy">
+                        <h1>Country Name is invalid</h1> 
+                       </div>
+                    </div> 
+                 )
                 }
     </div>
   )
